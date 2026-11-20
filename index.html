@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Z-Buffer Visualisierung</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="ext/gl-matrix.js"></script>
+  <script src="GVT_Src_vertexData_plane.js"></script>
+  <script src="GVT_Src_vertexData_sphere.js"></script>
+  <script src="GVT_Src_vertexData_torus.js"></script>
+  <script src="SHA_Src_tpl.js"></script>
+  <script id="vertexshader" type="x-shader/x-vertex">
+    attribute vec3 aPosition;
+    uniform mat4 uPMatrix;
+    uniform mat4 uMVMatrix;
+    void main() {
+      vec4 viewPosition = uMVMatrix * vec4(aPosition, 1.0);
+      gl_Position = uPMatrix * viewPosition;
+    }
+  </script>
+  <script id="fragmentshader" type="x-shader/x-fragment">
+    precision highp float;
+    uniform float uNear;
+    uniform float uFar;
+    uniform float uDepthStart;
+    uniform float uDepthEnd;
+    void main() {
+      // gl_FragCoord.z ist nichtlinear im perspektivischen Tiefenpuffer.
+      // Umrechnung in lineare Distanz entlang der Kamera-Z-Achse.
+      float ndcZ = gl_FragCoord.z * 2.0 - 1.0;
+      float linearDepth = (2.0 * uNear * uFar) /
+                          (uFar + uNear - ndcZ * (uFar - uNear));
+      // Ein begrenztes Anzeigeintervall verstärkt den sichtbaren Kontrast.
+      float gray = clamp((linearDepth - uDepthStart) /
+                         max(uDepthEnd - uDepthStart, 0.001), 0.0, 1.0);
+      gl_FragColor = vec4(vec3(gray), 1.0);
+    }
+  </script>
+</head>
+<body onload="app.start()">
+<header>
+  <h1>Z-Buffer Visualisierung</h1>
+</header>
+<main>
+  <section class="panel viewer">
+    <canvas id="canvas" width="960" height="580" aria-label="Interaktive dreidimensionale WebGL-Szene"></canvas>
+    <div class="status"><span>Z-Buffer (Graustufen)</span><span id="cameraLabel">Kamera</span></div>
+  </section>
+  <section class="panel controls">
+    <div>
+      <h2>Z-Buffer-Darstellung</h2>
+      <div class="buttonrow">
+        <button id="resetButton" class="secondary" type="button">Zurücksetzen</button>
+      </div>
+      <p class="hint">Dunkel = nahe an der Kamera · Hell = weiter entfernt. Der Z-Buffer wird über <code>gl_FragCoord.z</code> im Fragment-Shader visualisiert.</p>
+    </div>
+    <div>
+      <h2>Tastatursteuerung</h2>
+      <table>
+        <tr><th>Tasten</th><th>Funktion</th></tr>
+        <tr><td>W / S</td><td>Kamera in der XY-Ebene nach oben / unten</td></tr>
+        <tr><td>A / D</td><td>Kamera in der XY-Ebene nach links / rechts</td></tr>
+        <tr><td>← / →</td><td>Szene um die Y-Achse drehen</td></tr>
+        <tr><td>↑ / ↓</td><td>Szene um die X-Achse drehen</td></tr>
+      </table>
+    </div>
+  </section>
+  <section class="panel info">
+    <div>
+      <h2>Aufbau der Szene</h2>
+      <p>Mehrere Kugeln, ein Torus und ein Würfel liegen in verschiedenen Tiefenebenen und verdecken sich teilweise. Eine Bodenfläche unterstützt die räumliche Orientierung. Der aktivierte Tiefentest entscheidet, welches Fragment sichtbar bleibt.</p>
+    </div>
+    <div>
+      <h2>Technische Umsetzung und Quellen</h2>
+      <p>Ausgangspunkt: Kursvorlage <code>SHA_Src_tpl.html</code> / <code>SHA_Src_tpl.js</code> aus Lerneinheit 12, ergänzt um die Geometrievorlagen aus dem Kurs und die Bibliothek gl-matrix.</p>
+      <p>Die Perspektiv-Tiefenwerte werden vor der Graustufendarstellung linearisiert. Grundlage zur Tiefenpräzision: <a href="https://developer.nvidia.com/blog/visualizing-depth-precision/" target="_blank" rel="noopener noreferrer">NVIDIA – Visualizing Depth Precision</a>.</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f2f5fa;
+    color: #1b2940;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+
+header,
+main {
+    max-width: 1120px;
+    margin: auto;
+    padding: 24px;
+}
+
+header {
+    padding-top: 35px;
+    padding-bottom: 12px;
+}
+
+header p {
+    margin: 6px 0;
+    color: #53637b;
+}
+
+h1 {
+    font-size: 2.3rem;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.1rem;
+    margin: 0 0 12px;
+}
+
+.eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.panel {
+    background: white;
+    border: 1px solid #dce4ef;
+    border-radius: 14px;
+    margin-bottom: 18px;
+    padding: 20px;
+    box-shadow: 0 4px 18px #1b29400a;
+}
+
+.viewer {
+    padding: 12px;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #eef3fa;
+    border-radius: 9px;
+}
+
+.status {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #53637b;
+    font-size: 0.9rem;
+    margin: 10px 8px 0;
+}
+
+.controls,
+.info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.buttonrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hint {
+    color: #53637b;
+    font-size: 0.9rem;
+}
+
+button {
+    border: 0;
+    background: #2563eb;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button.secondary {
+    background: #e9eef8;
+    color: #1b2940;
+}
+
+button.secondary:hover {
+    background: #dce6f5;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+td,
+th {
+    padding: 7px;
+    text-align: left;
+    border-bottom: 1px solid #e5eaf2;
+}
+
+td:first-child {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+a {
+    color: #2563eb;
+}
+
+@media (max-width: 700px) {
+
+    .controls,
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    header,
+    main {
+        padding: 14px;
+    }
+}
